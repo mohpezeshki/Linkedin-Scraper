@@ -21,20 +21,37 @@ from linkedin_scraper import LinkedInScraper
 
 scraper = LinkedInScraper()
 
-# search jobs
-jobs = scraper.search_jobs("Software Engineer", remote="remote", job_type="full_time")
-for job in jobs["data"]:
-    print(job["title"], job["company"]["name"])
+# find the geocode for a location
+locations = scraper.search_locations("San Francisco")
+geocode = locations["data"][0]["id"]
 
-# job details
-detail = scraper.get_job_detail("4413763968", include_skills=True)
+# search for remote jobs with filters
+jobs = scraper.search_jobs(
+    keyword="Software Engineer",
+    geocode=geocode,
+    remote="remote",
+    job_type="full_time",
+    experience_level="mid_senior",
+    sort_by="recent",
+)
+for job in jobs["data"][:3]:
+    print(job["title"], "—", job["company"]["name"])
 
-# user profile
-profile = scraper.get_user_profile("satyanadella", include_experiences=True)
+    # get full details for each job
+    detail = scraper.get_job_detail(job["id"], include_skills=True)
+    print(detail["data"].get("salary", {}))
 
-# search people
-people = scraper.search_people("John", title="Engineer", current_company="1441")
+# look up a company
+company = scraper.get_company_profile(company="google")
+print(company["data"]["name"], company["data"].get("staff_count"))
+
+# search for people
+people = scraper.search_people("Sundar", current_company="1441", title="CEO")
+for person in people["data"][:3]:
+    print(person["name"], "—", person.get("headline", ""))
 ```
+
+See [main.py](main.py) for a full runnable example.
 
 ## API Coverage
 
