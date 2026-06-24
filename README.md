@@ -167,3 +167,7 @@ linkedin_scraper/
     urls.py                      # all endpoint URLs
     validators.py                # parameter validation rules
 ```
+
+## License
+
+MIT
